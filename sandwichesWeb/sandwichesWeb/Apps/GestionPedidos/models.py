@@ -37,11 +37,8 @@ class Pedido(models.Model):
     class Meta:
         db_table = 'pedido'
 
-    total = models.FloatField(null=False, blank=False)
     fecha = models.DateField(null=False, auto_now_add=True)
-    fk_cliente = models.ForeignKey(
-        Cliente, null=False, blank=False, on_delete=models.CASCADE
-    )
+    fk_cliente = models.ForeignKey(Cliente, related_name='pedidos', on_delete=models.CASCADE)
 
 
 class Sandwich_ingrediente(models.Model):
@@ -49,12 +46,8 @@ class Sandwich_ingrediente(models.Model):
         db_table = 'sandwich_ingrediente'
 
     subtotal = models.FloatField(null=False, blank=False)
-    fk_sandwich = models.ForeignKey(
-        Sandwich, null=False, blank=False, on_delete=models.CASCADE
-    )
-    fk_ingrediente = models.ForeignKey(
-        Ingrediente_adicional, null=False, blank=False, on_delete=models.CASCADE
-    )
+    fk_sandwich_id = models.IntegerField(null=False, blank=False)
+    fk_ingrediente_id = models.IntegerField(null=False, blank=False)
     fk_pedido = models.ForeignKey(
         Pedido, null=False, blank=False, on_delete=models.CASCADE
     )

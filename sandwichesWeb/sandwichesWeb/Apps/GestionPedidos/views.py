@@ -1,25 +1,46 @@
+from sandwichesWeb.Apps.GestionPedidos.models import Pedido, Cliente, Sandwich_ingrediente
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from sandwichesWeb.Apps.GestionPedidos.models import *
-from rest_framework import viewsets
-from sandwichesWeb.Apps.GestionPedidos.serializers import ClienteSerializer
-from sandwichesWeb.Apps.GestionPedidos.responser import getResp
+from rest_framework import status
+from sandwichesWeb.Apps.GestionPedidos import serializers
 
-# Create your views here.
+class PedidoApiView(APIView):
 
+    serializer_class = serializers.SandwichIngredienteSerializer
 
-class ClienteViewSet(viewsets.ModelViewSet):
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
 
-    queryset = Cliente.objects.all()
-    serializer_class = ClienteSerializer
+        if serializer.is_valid():
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
+            cliente = serializer.validated_data.get('customer')
+            detail = serializer.validated_data.get('orderDetail')
+            date = serializer.validated_data.get('date')
 
-        return Response(getResp(serializer.data))
+            obj, created = Cliente.objects.get_or_create(
+                dni = cliente['dni'],
+                defaults = {"nombre":cliente['name'], "apellido":cliente['lastname']}
+            )
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
+            for d in detail:
+                pedido = Pedido.objects.create(
+                    fk_cliente = obj,
+                    fecha = date
+                )
+                for i in d['ingredients']:
+                    Sandwich_ingrediente.objects.create(
+                        fk_sandwich_id = d['size'],
+                        fk_ingrediente_id = i,
+                        fk_pedido = pedido,
+                        subtotal = d['subtotal']
+                    )
 
-        return Response(getResp(serializer.data))
+            return Response(
+                {"status": "Success", "code": 200, "message": "Pedido creado"},
+            )
+
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
