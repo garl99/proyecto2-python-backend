@@ -276,4 +276,11 @@ class PedidoApiView(APIView):
             "Clients": serializerClientes.data,
         })
 
-        return Response(Reporte)
+        return Response(
+            {
+                "status":"Success", 
+                "code": 200, 
+                "message": "Obteniendo pedidos", 
+                "result": Reporte
+            }
+        )
