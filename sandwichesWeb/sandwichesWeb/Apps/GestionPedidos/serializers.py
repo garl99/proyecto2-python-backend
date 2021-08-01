@@ -25,3 +25,8 @@ class ReporteSerializer(serializers.Serializer):
     total = serializers.FloatField()
     date = serializers.DateField()
 
+class ReporteIngredienteSerializer(serializers.Serializer):
+    jamon = serializers.JSONField()
+    carne = serializers.JSONField()
+    salchichon = serializers.JSONField()
+
