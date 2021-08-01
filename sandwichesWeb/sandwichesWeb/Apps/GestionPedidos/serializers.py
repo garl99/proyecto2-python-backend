@@ -16,3 +16,17 @@ class SandwichIngredienteSerializer(serializers.Serializer):
     orderDetail = OrderDetailSerializer(many=True)
     total = serializers.FloatField()
     date = serializers.DateField()
+
+class ReporteSerializer(serializers.Serializer):
+    id =  serializers.IntegerField()
+    customer = serializers.CharField(max_length=120)
+    size = serializers.CharField(max_length=35)
+    ingredients = serializers.CharField(max_length=120)
+    total = serializers.FloatField()
+    date = serializers.DateField()
+
+class ReporteIngredienteSerializer(serializers.Serializer):
+    jamon = serializers.JSONField()
+    carne = serializers.JSONField()
+    salchichon = serializers.JSONField()
+
