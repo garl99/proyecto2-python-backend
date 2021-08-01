@@ -200,7 +200,7 @@ class PedidoApiView(APIView):
 
         # Devolvemos la lista de elementos agrupados
         pedidosAgrupados = []
-        pedidosAgrupados.append(ingredientesAgrupados)
+        pedidosAgrupados.append({"agrupado": ingredientesAgrupados})
 
         return pedidosAgrupados
 
@@ -250,7 +250,7 @@ class PedidoApiView(APIView):
             item['ingredients'] = PedidoApiView.listToString(
                 item['ingredients'])
             resultFixed.append(item)
-
+            
         return resultFixed
 
     def get(self, request, *args, **kwargs):
